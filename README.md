@@ -273,6 +273,3 @@ OPENAI_BASE_URL=https://my-proxy.example/v1 OPENAI_MODEL=gpt-5.5 pnpm run genera
 | `pnpm run test:report` | Open the latest HTML report |
 | `pnpm run generate` | Build + run the generator (`generate` subcommand) |
 
-## License
-
-MIT.

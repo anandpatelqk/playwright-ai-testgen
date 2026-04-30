@@ -34,7 +34,7 @@ export class OpenAIClient {
       baseURL: config.openaiBaseUrl ?? 'https://openrouter.ai/api/v1',
       defaultHeaders: {
         'HTTP-Referer': 'https://github.com/anandpatelqk/airdrop-zoho-snap-in',
-        'X-Title': 'playwright-ai-testgen',
+        'X-OpenRouter-Title': 'playwright-ai-testgen',
       },
     });
     this.log.setLevel(config.logLevel);

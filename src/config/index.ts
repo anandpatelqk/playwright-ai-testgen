@@ -1,7 +1,12 @@
 import * as dotenv from 'dotenv';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { AppConfig, LogLevel } from '../types/index.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+// Walk up from dist/config/ → project root to find .env
+const projectRoot = resolve(dirname(__filename), '..', '..');
+dotenv.config({ path: resolve(projectRoot, '.env'), override: true });
 
 /**
  * Default OpenAI model.

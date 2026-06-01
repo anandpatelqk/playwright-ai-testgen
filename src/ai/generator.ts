@@ -15,9 +15,11 @@ import {
  */
 export class AiTestGenerator {
   private readonly client: OpenAIClient;
+  private readonly config: AppConfig;
   private readonly log = rootLogger.child('ai-generator');
 
   constructor(config: AppConfig, client?: OpenAIClient) {
+    this.config = config;
     this.client = client ?? new OpenAIClient(config);
     this.log.setLevel(config.logLevel);
   }
@@ -63,6 +65,8 @@ export class AiTestGenerator {
         scenarios,
         model: this.model,
         generatedAt,
+        devrevEmail: this.config.devrevEmail,
+        devrevBaseUrl: this.config.devrevBaseUrl,
       }),
       temperature: 0.1,
     });

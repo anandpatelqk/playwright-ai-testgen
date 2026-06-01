@@ -78,5 +78,8 @@ export function loadConfig(requireApiKey = true): AppConfig {
     pageLoadTimeoutMs: readEnvInt('PAGE_LOAD_TIMEOUT_MS', 30_000),
     pageIdleTimeoutMs: readEnvInt('PAGE_IDLE_TIMEOUT_MS', 2_000),
     logLevel: readEnvLogLevel('LOG_LEVEL', 'info'),
+    devrevEmail: readEnv('DEVREV_EMAIL'),
+    devrevOutlookPassword: readEnv('DEVREV_OUTLOOK_PASSWORD'),
+    devrevBaseUrl: readEnv('DEVREV_BASE_URL', 'https://app.devrev.ai'),
   };
 }

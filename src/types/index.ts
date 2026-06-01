@@ -19,6 +19,10 @@ export interface AppConfig {
   pageLoadTimeoutMs: number;
   pageIdleTimeoutMs: number;
   logLevel: LogLevel;
+  /** DevRev authentication */
+  devrevEmail?: string;
+  devrevOutlookPassword?: string;
+  devrevBaseUrl?: string;
 }
 
 /** A single interactive element extracted from the page DOM. */

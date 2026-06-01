@@ -1,4 +1,5 @@
 import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
+import { loginToDevRev } from '../auth/devrev-login.js';
 import { DomParser } from '../parser/dom.js';
 import type { AppConfig, PageAnalysis } from '../types/index.js';
 import { rootLogger } from '../utils/logger.js';
@@ -11,6 +12,9 @@ export interface AnalyzeOptions {
 /**
  * Crawls a URL with Playwright (Chromium, headless) and extracts a structured
  * PageAnalysis using the Cheerio-based DomParser.
+ *
+ * When DEVREV_EMAIL is set in the environment the analyzer will first perform
+ * a full DevRev OTP login so that protected pages can be scraped.
  *
  * Designed to be used once per generation run:
  *   const analyzer = new PageAnalyzer(config);
@@ -35,13 +39,26 @@ export class PageAnalyzer {
     if (this.browser) {
       return;
     }
-    this.log.debug('Launching headless Chromium...');
-    this.browser = await chromium.launch({ headless: true });
+    this.log.debug('Launching Chromium…');
+
+    // Run headless in CI, headed locally so the operator can see the OTP prompt
+    const headless = process.env.CI ? true : false;
+    this.browser = await chromium.launch({ headless });
     this.context = await this.browser.newContext({
       viewport: { width: 1280, height: 800 },
       userAgent:
         'Mozilla/5.0 (compatible; playwright-ai-testgen/0.1; +https://github.com/your-org)',
     });
+
+    // Authenticate if DevRev credentials are configured
+    if (this.config.devrevEmail) {
+      await loginToDevRev(this.context, {
+        email: this.config.devrevEmail,
+        outlookPassword: this.config.devrevOutlookPassword,
+        baseUrl: this.config.devrevBaseUrl ?? 'https://app.devrev.ai',
+      });
+      this.log.info('Browser context is now authenticated with DevRev.');
+    }
   }
 
   async stop(): Promise<void> {
